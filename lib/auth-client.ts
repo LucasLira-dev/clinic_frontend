@@ -1,8 +1,9 @@
 import { createAuthClient } from "better-auth/react";
+import { adminClient } from "better-auth/client/plugins";
 
 const USER_ROLES = {
-    STUDENT: "student",
-    TEACHER: "teacher",
+    PATIENT: "patient",
+    DOCTOR: "doctor",
     ADMIN: "admin",
 };
 
@@ -15,6 +16,9 @@ export const authClient = createAuthClient({
   fetchOptions: {
     credentials: 'include',
   },
+  plugins: [
+    adminClient(),
+  ],
   user: {
     additionalFields: {
       role: {
@@ -31,3 +35,5 @@ export const authClient = createAuthClient({
     },
   },
 })
+
+export { USER_ROLES }
