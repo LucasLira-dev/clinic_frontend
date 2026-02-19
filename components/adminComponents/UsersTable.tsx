@@ -20,7 +20,6 @@ import UploadWidget from "./UploadWidget"
 import { DoctorTableRow, PatientTableRow, UploadWidgetValue } from "@/types/index"
 
 import { toast } from "sonner"
-import { AdminDataDialog } from "./AdminDataDialog"
 import { DeleteButton } from "./DeleteButton"
 
 
@@ -53,23 +52,20 @@ interface UsersTableProps {
     patientsData: PatientTableRow[] | undefined;
     isLoadingPatients: boolean;
     errorPatients: unknown;
+    refetchDoctors?: () => Promise<unknown>; 
 }
 
-export default function UsersTable({ doctorsData, isLoading, error, patientsData, isLoadingPatients, errorPatients }: UsersTableProps) {
+export default function UsersTable({ doctorsData, isLoading, error, patientsData, isLoadingPatients, errorPatients, refetchDoctors }: UsersTableProps) {
   const [uploadedImage, setUploadedImage] = useState<UploadWidgetValue | null>(null)
   const [diasSelecionados, setDiasSelecionados] = useState<DayOfWeek[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [newDoctorData, setNewDoctorData] = useState({
-    email: "",
-    senhaTemporaria: "",
-  })
   
   // Form state
   const [formData, setFormData] = useState({
     nome: "",
     crm: "",
     email: "",
+    senha: "",
     biografia: "",
     especialidade: "",
   })
@@ -99,36 +95,41 @@ export default function UsersTable({ doctorsData, isLoading, error, patientsData
       return
     }
 
+    if (!formData.senha || formData.senha.length < 8) {
+      toast.error("A senha precisa ter pelo menos 8 caracteres.")
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
-      const response = await createDoctor({
+      await createDoctor({
         nome: formData.nome,
         crm: formData.crm,
         email: formData.email,
+        senha: formData.senha,
         biografia: formData.biografia,
         profilePhoto: uploadedImage?.url || "",
         especialidades: [formData.especialidade],
         diasAtendimento: diasSelecionados,
       })
 
-      if (response){
-        setNewDoctorData({
-          email: response.email,
-          senhaTemporaria: response.senhaTemporaria,
-        })
-        setDialogOpen(true)
-      }
-
+      toast.success("Médico criado com sucesso!")
+      
       setFormData({
         nome: "",
         crm: "",
         email: "",
+        senha: "",
         biografia: "",
         especialidade: "",
       })
       setUploadedImage(null)
       setDiasSelecionados([])
+
+      if (refetchDoctors) {
+        await refetchDoctors()
+      }
     } 
     catch (error) {
       console.error("Erro ao criar médico:", error)
@@ -143,6 +144,7 @@ export default function UsersTable({ doctorsData, isLoading, error, patientsData
       nome: "",
       crm: "",
       email: "",
+      senha: "",
       biografia: "",
       especialidade: "",
     })
@@ -303,6 +305,22 @@ export default function UsersTable({ doctorsData, isLoading, error, patientsData
                 />
               </div>
 
+              {/* Senha definida pelo admin */}
+              <div className="space-y-2">
+                <Label htmlFor="senha">Senha</Label>
+                <Input
+                  id="senha"
+                  type="password"
+                  value={formData.senha}
+                  onChange={(e) =>
+                    setFormData({ ...formData, senha: e.target.value })
+                  }
+                  placeholder="Defina a senha do médico"
+                  minLength={8}
+                  required
+                />
+              </div>
+
               {/* Biografia */}
               <div className="space-y-2">
                 <Label htmlFor="biografia">Biografia</Label>
@@ -379,13 +397,6 @@ export default function UsersTable({ doctorsData, isLoading, error, patientsData
           </div>
         </TabsContent>
       </Tabs>
-
-      <AdminDataDialog
-        email={newDoctorData.email}
-        password={newDoctorData.senhaTemporaria}
-        isOpen={dialogOpen}
-        onOpenChange={setDialogOpen}
-        />
     </div>
   )
 }

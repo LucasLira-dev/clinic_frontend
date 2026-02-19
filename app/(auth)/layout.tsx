@@ -8,11 +8,17 @@ export default async function AuthLayout({
   children: React.ReactNode;
 }>) {
 
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers()
-    }
-  });
+  let session = null;
+  try {
+    session = await authClient.getSession({
+      fetchOptions: {
+        headers: await headers()
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao obter sessão:', error);
+    // Não redirecione aqui!
+  }
 
   if (session && session.data?.user) {
     redirect('/');

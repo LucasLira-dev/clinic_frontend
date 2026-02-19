@@ -13,6 +13,7 @@ export enum DayOfWeek {
 export type DoctorData = {
   nome: string;
   email: string;
+    senha: string;
   crm: string;
   biografia?: string;
   profilePhoto?: string;
@@ -23,7 +24,6 @@ export type DoctorData = {
 export type CreateDoctorResponse = {
   userId: string;
   email: string;
-  senhaTemporaria: string;
   doctorProfile: {
     id: string;
     userId: string;
@@ -41,7 +41,7 @@ type PatientApiResponse = {
     createdAt: string;
 };
 
-export const createDoctor = async (doctorData: DoctorData): Promise<CreateDoctorResponse> => {
+export const createDoctor = async (doctorData: DoctorData) => {
     try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/medicos`, {
             method: 'POST',
@@ -57,10 +57,9 @@ export const createDoctor = async (doctorData: DoctorData): Promise<CreateDoctor
             throw new Error(errorData.message || 'Erro ao criar médico');
         }
 
-        const responseJson = await response.json();
-
-        const data = responseJson.data;
-        return data;
+        return {
+            message: 'Médico criado com sucesso',
+        }
     }
     catch (error) {
         console.error('Erro ao criar médico:', error);

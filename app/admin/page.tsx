@@ -1,24 +1,29 @@
 import { AdminContent } from "@/components/adminComponents/AdminContent"
 import { Separator } from "@/components/ui/separator"
+import { authClient } from "@/lib/auth-client";
 import { ShieldCheck } from "lucide-react"
-import { authClient } from "@/lib/auth-client"
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function AdminPage() {
 
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers()
-    }
-  });
+  let session = null;
+  try {
+    session = await authClient.getSession({
+      fetchOptions: {
+        headers: await headers()
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao obter sessão:', error);
+  }
 
-  if (!session || !session.data?.user) {
+  if (!session) {
     redirect('/login');
   }
 
-  if (session.data.user.role !== 'admin') {
-    redirect('/');   
+  if (session.data?.user?.role !== 'admin') {
+    redirect('/');
   }
 
   return (
