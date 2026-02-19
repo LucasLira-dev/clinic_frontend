@@ -1,5 +1,7 @@
+
 import { createAuthClient } from "better-auth/react";
 import { adminClient } from "better-auth/client/plugins";
+
 
 const USER_ROLES = {
     PATIENT: "patient",

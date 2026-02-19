@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { ConditionalLayout } from "./ConditionalLayout";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,8 +35,10 @@ export default function RootLayout({
           src="https://upload-widget.cloudinary.com/latest/global/all.js" 
           strategy="beforeInteractive"
         />
-        <Toaster />
-        <ConditionalLayout>{children}</ConditionalLayout>
+        <Providers>
+          <Toaster />
+          <ConditionalLayout>{children}</ConditionalLayout>
+        </Providers>
       </body>
     </html>
   );
