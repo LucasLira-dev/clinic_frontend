@@ -1,9 +1,26 @@
-import { AdminStats } from "@/components/adminComponents/adminStats"
-import UsersTable from "@/components/adminComponents/UsersTable"
+import { AdminContent } from "@/components/adminComponents/AdminContent"
 import { Separator } from "@/components/ui/separator"
 import { ShieldCheck } from "lucide-react"
+import { authClient } from "@/lib/auth-client"
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers()
+    }
+  });
+
+  if (!session || !session.data?.user) {
+    redirect('/login');
+  }
+
+  if (session.data.user.role !== 'admin') {
+    redirect('/');   
+  }
+
   return (
     <div className="p-6">
       <h1 className="font-bold text-2xl mb-4">Administração</h1>
@@ -20,10 +37,7 @@ export default function AdminPage() {
             </p>
         </div>
       </div>
-
-      <AdminStats />
-
-      <UsersTable />
+      <AdminContent />
     </div>
   )
 }

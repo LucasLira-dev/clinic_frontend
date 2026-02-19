@@ -14,83 +14,16 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Trash2, Star, } from "lucide-react"
-import { createDoctor } from "@/services/adminService"
+import { Star, } from "lucide-react"
+import { createDoctor, DayOfWeek } from "@/services/adminService"
 import UploadWidget from "./UploadWidget"
-import { UploadWidgetValue } from "@/types/index"
+import { DoctorTableRow, PatientTableRow, UploadWidgetValue } from "@/types/index"
 
 import { toast } from "sonner"
 import { AdminDataDialog } from "./AdminDataDialog"
+import { DeleteButton } from "./DeleteButton"
 
-// Tipos
-interface Medico {
-  id: string
-  nome: string
-  especialidade: string
-  crm: string
-  avaliacao: number
-  consultasSemanais: number
-  foto?: string
-}
 
-interface Paciente {
-  id: string
-  nome: string
-  avatar?: string
-  consultas: number
-  cadastro: string
-}
-
-// Dados mockados
-const medicosMock: Medico[] = [
-  {
-    id: "1",
-    nome: "Dr. João Silva",
-    especialidade: "Cardiologia",
-    crm: "12345-SP",
-    avaliacao: 4.8,
-    consultasSemanais: 25,
-  },
-  {
-    id: "2",
-    nome: "Dra. Maria Santos",
-    especialidade: "Dermatologia",
-    crm: "67890-SP",
-    avaliacao: 4.9,
-    consultasSemanais: 30,
-  },
-  {
-    id: "3",
-    nome: "Dr. Carlos Oliveira",
-    especialidade: "Ortopedia",
-    crm: "54321-RJ",
-    avaliacao: 4.7,
-    consultasSemanais: 20,
-  },
-]
-
-const pacientesMock: Paciente[] = [
-  {
-    id: "1",
-    nome: "Ana Paula Costa",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana",
-    consultas: 12,
-    cadastro: "15/01/2024",
-  },
-  {
-    id: "2",
-    nome: "Roberto Ferreira",
-    consultas: 8,
-    cadastro: "20/02/2024",
-  },
-  {
-    id: "3",
-    nome: "Juliana Mendes",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Juliana",
-    consultas: 15,
-    cadastro: "10/12/2023",
-  },
-]
 
 const especialidades = [
   "Cardiologia",
@@ -103,21 +36,28 @@ const especialidades = [
   "Oftalmologia",
 ]
 
-const diasSemana = [
-  "SEGUNDA",
-  "TERCA",
-  "QUARTA",
-  "QUINTA",
-  "SEXTA",
-  "SABADO",
-  "DOMINGO",
+const diasSemana: DayOfWeek[] = [
+  DayOfWeek.SEGUNDA,
+  DayOfWeek.TERCA,
+  DayOfWeek.QUARTA,
+  DayOfWeek.QUINTA,
+  DayOfWeek.SEXTA,
+  DayOfWeek.SABADO,
+  DayOfWeek.DOMINGO,
 ]
 
-export default function UsersTable() {
-  const [medicos, setMedicos] = useState<Medico[]>(medicosMock)
-  const [pacientes] = useState<Paciente[]>(pacientesMock)
+interface UsersTableProps {
+    doctorsData: DoctorTableRow[] | undefined;
+    isLoading: boolean;
+    error: unknown;
+    patientsData: PatientTableRow[] | undefined;
+    isLoadingPatients: boolean;
+    errorPatients: unknown;
+}
+
+export default function UsersTable({ doctorsData, isLoading, error, patientsData, isLoadingPatients, errorPatients }: UsersTableProps) {
   const [uploadedImage, setUploadedImage] = useState<UploadWidgetValue | null>(null)
-  const [diasSelecionados, setDiasSelecionados] = useState<string[]>([])
+  const [diasSelecionados, setDiasSelecionados] = useState<DayOfWeek[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [newDoctorData, setNewDoctorData] = useState({
@@ -134,11 +74,8 @@ export default function UsersTable() {
     especialidade: "",
   })
 
-  const handleRemoverMedico = (id: string) => {
-    setMedicos(medicos.filter((m) => m.id !== id))
-  }
 
-  const toggleDia = (dia: string) => {
+  const toggleDia = (dia: DayOfWeek) => {
     setDiasSelecionados((prev) =>
       prev.includes(dia) ? prev.filter((d) => d !== dia) : [...prev, dia]
     )
@@ -172,7 +109,7 @@ export default function UsersTable() {
         biografia: formData.biografia,
         profilePhoto: uploadedImage?.url || "",
         especialidades: [formData.especialidade],
-        diasAtendimento: diasSelecionados as any, // Cast para o tipo esperado pela API
+        diasAtendimento: diasSelecionados,
       })
 
       if (response){
@@ -213,6 +150,14 @@ export default function UsersTable() {
     setDiasSelecionados([])
   }
 
+  if (isLoading || isLoadingPatients) {
+    return <div>Carregando dados...</div>
+  }
+
+  if (error || errorPatients) {
+    return <div>Erro ao carregar dados. Por favor, tente novamente.</div>
+  }
+
   return (
     <div className="w-full mt-12">
       <Tabs defaultValue="medicos" className="w-full">
@@ -237,29 +182,20 @@ export default function UsersTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {medicos.map((medico) => (
+                {doctorsData?.map((medico: DoctorTableRow) => (
                   <TableRow key={medico.id}>
-                    <TableCell className="font-medium">{medico.nome}</TableCell>
+                    <TableCell className="font-medium">{medico.medico}</TableCell>
                     <TableCell>{medico.especialidade}</TableCell>
                     <TableCell>{medico.crm}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <Star className="size-4 fill-warning text-warning" />
-                        <span>{medico.avaliacao.toFixed(1)}</span>
+                        <span> 5.0 </span>
                       </div>
                     </TableCell>
                     <TableCell>{medico.consultasSemanais}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRemoverMedico(medico.id)}
-                          className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
-                      </div>
+                      <DeleteButton userId={medico.userId} userType="doctor" userName={medico.medico}/>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -281,7 +217,7 @@ export default function UsersTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pacientes.map((paciente) => (
+                {patientsData?.map((paciente: PatientTableRow) => (
                   <TableRow key={paciente.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -302,16 +238,7 @@ export default function UsersTable() {
                     <TableCell>{paciente.consultas}</TableCell>
                     <TableCell>{paciente.cadastro}</TableCell>
                     <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          // onClick={() => handleRemoverPaciente(paciente.id)}
-                          className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                        >
-                          <Trash2 className="size-4" />
-                        </Button>
-                      </div>
+                      <DeleteButton userId={paciente.id}  userType="patient" userName={paciente.nome}/>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -386,7 +313,7 @@ export default function UsersTable() {
                     setFormData({ ...formData, biografia: e.target.value })
                   }
                   placeholder="Conte um pouco sobre a formação e experiência do médico..."
-                  className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-h-30 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   required
                 />
               </div>

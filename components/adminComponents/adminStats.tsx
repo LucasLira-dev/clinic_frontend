@@ -1,30 +1,37 @@
 import { CalendarCheck, Stethoscope, Users } from "lucide-react"
 
-const stats = [
-  {
-    label: "Total Medicos",
-    value: 6,
-    icon: Stethoscope,
-    iconBg: "bg-chart-2/10",
-    iconColor: "text-chart-2",
-  },
-  {
-    label: "Total Pacientes",
-    value: 18,
-    icon: Users,
-    iconBg: "bg-chart-2/10",
-    iconColor: "text-chart-2",
-  },
-  {
-    label: "Consultas Semana",
-    value: 25,
-    icon: CalendarCheck,
-    iconBg: "bg-chart-2/10",
-    iconColor: "text-chart-2",
-  },
-]
+interface AdminStatsProps {
+    totalDoctors: number;
+    totalPatients: number;
+    weeklyAppointments: number;
+}
 
-export const AdminStats = () => {
+export const AdminStats = ({ totalDoctors, totalPatients, weeklyAppointments }: AdminStatsProps) => {
+
+    const stats = [
+        {
+            label: "Total Medicos",
+            value: totalDoctors,
+            icon: Stethoscope,
+            iconBg: "bg-chart-2/10",
+            iconColor: "text-chart-2",
+        },
+        {
+            label: "Total Pacientes",
+            value: totalPatients,
+            icon: Users,
+            iconBg: "bg-chart-2/10",
+            iconColor: "text-chart-2",
+        },
+        {
+            label: "Consultas Semana",
+            value: weeklyAppointments,
+            icon: CalendarCheck,
+            iconBg: "bg-chart-2/10",
+            iconColor: "text-chart-2",
+        },
+    ]
+
     return (
         <div className="mt-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
