@@ -13,12 +13,14 @@ export enum DayOfWeek {
 export type DoctorData = {
   nome: string;
   email: string;
-    senha: string;
+  senha: string;
   crm: string;
   biografia?: string;
   profilePhoto?: string;
   especialidades: string[];
-  diasAtendimento: DayOfWeek[]; // Array de dias da semana
+  diasAtendimento: DayOfWeek[]; 
+  startTime: string;
+  endTime: string;
 }
 
 export type CreateDoctorResponse = {
