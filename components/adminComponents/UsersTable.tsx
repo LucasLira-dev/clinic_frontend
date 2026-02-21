@@ -1,7 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-"use client"
-
-import { useState } from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import {
   Table,
@@ -11,39 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Star, } from "lucide-react"
-import { createDoctor, DayOfWeek } from "@/services/adminService"
-import UploadWidget from "./UploadWidget"
-import { DoctorTableRow, PatientTableRow, UploadWidgetValue } from "@/types/index"
-
-import { toast } from "sonner"
+import { DoctorTableRow, PatientTableRow } from "@/types/index"
 import { DeleteButton } from "./DeleteButton"
+import { AddDoctorForm } from "./AddDoctorForm"
 
-
-
-const especialidades = [
-  "Cardiologia",
-  "Dermatologia",
-  "Ortopedia",
-  "Pediatria",
-  "Neurologia",
-  "Ginecologia",
-  "Psiquiatria",
-  "Oftalmologia",
-]
-
-const diasSemana: DayOfWeek[] = [
-  DayOfWeek.SEGUNDA,
-  DayOfWeek.TERCA,
-  DayOfWeek.QUARTA,
-  DayOfWeek.QUINTA,
-  DayOfWeek.SEXTA,
-  DayOfWeek.SABADO,
-  DayOfWeek.DOMINGO,
-]
 
 interface UsersTableProps {
     doctorsData: DoctorTableRow[] | undefined;
@@ -56,101 +25,6 @@ interface UsersTableProps {
 }
 
 export default function UsersTable({ doctorsData, isLoading, error, patientsData, isLoadingPatients, errorPatients, refetchDoctors }: UsersTableProps) {
-  const [uploadedImage, setUploadedImage] = useState<UploadWidgetValue | null>(null)
-  const [diasSelecionados, setDiasSelecionados] = useState<DayOfWeek[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  // Form state
-  const [formData, setFormData] = useState({
-    nome: "",
-    crm: "",
-    email: "",
-    senha: "",
-    biografia: "",
-    especialidade: "",
-  })
-
-
-  const toggleDia = (dia: DayOfWeek) => {
-    setDiasSelecionados((prev) =>
-      prev.includes(dia) ? prev.filter((d) => d !== dia) : [...prev, dia]
-    )
-  }
-
-  const handleSubmitMedico = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (isSubmitting) {
-      console.log("Já está processando...")
-      return
-    }
-    
-    if (diasSelecionados.length === 0) {
-      toast.error("Por favor, selecione pelo menos um dia de atendimento.")
-      return
-    }
-
-    if (!uploadedImage) {
-      toast.error("Por favor, faça o upload da foto do médico.")
-      return
-    }
-
-    if (!formData.senha || formData.senha.length < 8) {
-      toast.error("A senha precisa ter pelo menos 8 caracteres.")
-      return
-    }
-
-    setIsSubmitting(true)
-
-    try {
-      await createDoctor({
-        nome: formData.nome,
-        crm: formData.crm,
-        email: formData.email,
-        senha: formData.senha,
-        biografia: formData.biografia,
-        profilePhoto: uploadedImage?.url || "",
-        especialidades: [formData.especialidade],
-        diasAtendimento: diasSelecionados,
-      })
-
-      toast.success("Médico criado com sucesso!")
-      
-      setFormData({
-        nome: "",
-        crm: "",
-        email: "",
-        senha: "",
-        biografia: "",
-        especialidade: "",
-      })
-      setUploadedImage(null)
-      setDiasSelecionados([])
-
-      if (refetchDoctors) {
-        await refetchDoctors()
-      }
-    } 
-    catch (error) {
-      console.error("Erro ao criar médico:", error)
-      toast.error("Erro ao criar médico. Por favor, tente novamente.")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const handleCancelar = () => {
-    setFormData({
-      nome: "",
-      crm: "",
-      email: "",
-      senha: "",
-      biografia: "",
-      especialidade: "",
-    })
-    setUploadedImage(null)
-    setDiasSelecionados([])
-  }
 
   if (isLoading || isLoadingPatients) {
     return <div>Carregando dados...</div>
@@ -251,150 +125,7 @@ export default function UsersTable({ doctorsData, isLoading, error, patientsData
 
         {/* Tab Adicionar Médico */}
         <TabsContent value="adicionar" className="mt-6">
-          <div className="rounded-lg border bg-card p-6">
-            <form onSubmit={handleSubmitMedico} className="space-y-6">
-              {/* Upload de Imagem */}
-              <div className="space-y-2">
-                <Label htmlFor="imagem">Foto do Médico</Label>
-                <UploadWidget 
-                  value={uploadedImage}
-                  onChange={setUploadedImage}
-                />
-              </div>
-
-              {/* Nome Completo */}
-              <div className="space-y-2">
-                <Label htmlFor="nome">Nome Completo</Label>
-                <Input
-                  id="nome"
-                  value={formData.nome}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nome: e.target.value })
-                  }
-                  placeholder="Digite o nome completo"
-                  required
-                />
-              </div>
-
-              {/* CRM */}
-              <div className="space-y-2">
-                <Label htmlFor="crm">CRM</Label>
-                <Input
-                  id="crm"
-                  value={formData.crm}
-                  onChange={(e) =>
-                    setFormData({ ...formData, crm: e.target.value })
-                  }
-                  placeholder="12345-UF"
-                  required
-                />
-              </div>
-
-              {/* Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  placeholder="medico@exemplo.com"
-                  required
-                />
-              </div>
-
-              {/* Senha definida pelo admin */}
-              <div className="space-y-2">
-                <Label htmlFor="senha">Senha</Label>
-                <Input
-                  id="senha"
-                  type="password"
-                  value={formData.senha}
-                  onChange={(e) =>
-                    setFormData({ ...formData, senha: e.target.value })
-                  }
-                  placeholder="Defina a senha do médico"
-                  minLength={8}
-                  required
-                />
-              </div>
-
-              {/* Biografia */}
-              <div className="space-y-2">
-                <Label htmlFor="biografia">Biografia</Label>
-                <textarea
-                  id="biografia"
-                  value={formData.biografia}
-                  onChange={(e) =>
-                    setFormData({ ...formData, biografia: e.target.value })
-                  }
-                  placeholder="Conte um pouco sobre a formação e experiência do médico..."
-                  className="flex min-h-30 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                />
-              </div>
-
-              {/* Especialidade */}
-              <div className="space-y-2">
-                <Label htmlFor="especialidade">Especialidade</Label>
-                <select
-                  id="especialidade"
-                  value={formData.especialidade}
-                  onChange={(e) =>
-                    setFormData({ ...formData, especialidade: e.target.value })
-                  }
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  required
-                >
-                  <option value="">Selecione uma especialidade</option>
-                  {especialidades.map((esp) => (
-                    <option key={esp} value={esp}>
-                      {esp}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Dias de Atendimento */}
-              <div className="space-y-2">
-                <Label>Dias de Atendimento</Label>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {diasSemana.map((dia) => (
-                    <label
-                      key={dia}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={diasSelecionados.includes(dia)}
-                        onChange={() => toggleDia(dia)}
-                        className="size-4 rounded border-input text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                      />
-                      <span className="text-sm">{dia}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Botões */}
-              <div className="flex gap-3 pt-4">
-                <Button type="submit" className="flex-1" disabled={isSubmitting}>
-                  {isSubmitting ? "Criando..." : "Adicionar Médico"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleCancelar}
-                  className="flex-1"
-                  disabled={isSubmitting}
-                >
-                  Cancelar
-                </Button>
-              </div>
-            </form>
-          </div>
+          <AddDoctorForm refetchDoctors={refetchDoctors} />
         </TabsContent>
       </Tabs>
     </div>
