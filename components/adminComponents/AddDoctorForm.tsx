@@ -80,11 +80,22 @@ export const AddDoctorForm = ({ refetchDoctors }: { refetchDoctors?: () => Promi
     }
     if (!horario.inicio || !horario.fim) {
       toast.error("Defina o horário de atendimento.")
-      return
+      return;
     }
-    if (parseInt(horario.inicio) < 8 || parseInt(horario.fim) > 18 || parseInt(horario.inicio) >= parseInt(horario.fim)) {
-      toast.error("Horário inválido. O atendimento deve ser entre 8h e 18h.")
-      return
+    
+    // Validação para HH:MM
+    const inicioHora = parseInt(horario.inicio.split(":")[0], 10);
+    const inicioMin = parseInt(horario.inicio.split(":")[1], 10);
+    const fimHora = parseInt(horario.fim.split(":")[0], 10);
+    const fimMin = parseInt(horario.fim.split(":")[1], 10);
+    // Horário de atendimento entre 08:00 e 18:00
+    if (
+      inicioHora < 8 ||
+      fimHora > 18 ||
+      (inicioHora > fimHora || (inicioHora === fimHora && inicioMin >= fimMin))
+    ) {
+      toast.error("Horário inválido. O atendimento deve ser entre 08:00 e 18:00 e o início deve ser antes do fim.");
+      return;
     }
     setIsSubmitting(true)
     try {
@@ -295,27 +306,20 @@ export const AddDoctorForm = ({ refetchDoctors }: { refetchDoctors?: () => Promi
                 <div className="flex gap-2 items-center">
                   <label className="text-xs">Início:</label>
                   <Input
-                    type="number"
-                    min={8}
-                    max={18}
-                    step={1}
+                    type="time"
                     value={horario.inicio}
                     onChange={e => setHorario(h => ({ ...h, inicio: e.target.value }))}
-                    className="w-16"
-                    placeholder="8"
+                    className="w-24"
+                    placeholder="08:00"
                   />
                   <label className="text-xs">Fim:</label>
                   <Input
-                    type="number"
-                    min={8}
-                    max={18}
-                    step={1}
+                    type="time"
                     value={horario.fim}
                     onChange={e => setHorario(h => ({ ...h, fim: e.target.value }))}
-                    className="w-16"
-                    placeholder="18"
+                    className="w-24"
+                    placeholder="18:00"
                   />
-                  <span className="text-xs text-muted-foreground">h</span>
                 </div>
               </div>
 
