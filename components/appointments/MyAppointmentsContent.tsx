@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AppointmentFilter, AppointmentItem, UserRole } from "@/types"
 import { filters, formatDateParts, statusMap } from "@/lib/utils"
+import { AppointmentsContentSkeleton } from "../skeletons/AppointmentContentSkeleton"
 
 
 export function MyAppointmentsContent({userId, userRole}: {userId: string, userRole: UserRole}) {
@@ -22,6 +23,7 @@ export function MyAppointmentsContent({userId, userRole}: {userId: string, userR
   })
 
   const appointments = useMemo<AppointmentItem[]>(() => data ?? [], [data])
+
 
   return (
     <div className="space-y-6 px-6 pb-6 pt-5">
@@ -56,17 +58,18 @@ export function MyAppointmentsContent({userId, userRole}: {userId: string, userR
       </Tabs>
 
       <div className="space-y-3">
-        {isLoading && (
-          <div className="rounded-xl border bg-card p-8 text-center text-muted-foreground">
-            Carregando consultas...
-          </div>
-        )}
 
         {!isLoading && isError && (
           <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center text-destructive">
             Nao foi possivel carregar suas consultas.
           </div>
         )}
+
+        {
+          isLoading && (
+            <AppointmentsContentSkeleton />
+          )
+        }
 
         {!isLoading && !isError && appointments.length === 0 && (
           <div className="rounded-xl border bg-card p-8 text-center text-muted-foreground">

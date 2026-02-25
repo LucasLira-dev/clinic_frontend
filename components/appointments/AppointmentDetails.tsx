@@ -11,6 +11,7 @@ import { Separator } from "../ui/separator";
 import { CancelAppointmentButton } from "./CancelAppointmentButton";
 import { AppointmentStatusBadge } from "./AppointmentStatusBadge";
 import { CompletedAppointmentButton } from "./CompletedAppointmentButton";
+import { AppointmentDetailsSkeleton } from "../skeletons/AppointmentDetailsSkeleton";
 
 interface AppointmentDetailsProps {
     appointmentId: string;
@@ -27,7 +28,7 @@ export const AppointmentDetails = ({ appointmentId, userId, userRole }: Appointm
     })
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-64">Carregando detalhes da consulta...</div>;
+        return <AppointmentDetailsSkeleton />
     }
 
     if (isError) {
