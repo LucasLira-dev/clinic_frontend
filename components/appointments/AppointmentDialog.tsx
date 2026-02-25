@@ -2,35 +2,41 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 import { Button } from '@/components/ui/button';
 
-interface ConfirmDeleteDialogProps {
+interface AppointmentDialogProps {
 open: boolean;
-userName: string;
+name: string;
+date: string;
+hour: string;
 onConfirm: () => void;
 onCancel: () => void;
 isLoading?: boolean;
+type?: 'cancel' | 'complete';
 }
 
-export default function ConfirmDeleteDialog({
+export default function AppointmentDialog({
 open,
-userName,
+name,
+date,
+hour,
 onConfirm,
 onCancel,
 isLoading = false,
-}: ConfirmDeleteDialogProps) {
+type = 'cancel',
+}: AppointmentDialogProps) {
 return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onCancel(); }}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Confirmar Exclusão</DialogTitle>
+                <DialogTitle>{type === 'cancel' ? 'Confirmar Cancelamento' : 'Confirmar Conclusão'}</DialogTitle>
             </DialogHeader>
             <div className="text-sm text-muted-foreground">
-                Tem certeza de que deseja deletar este usuário <strong>{userName}</strong>?
+                Tem certeza de que deseja {type === 'cancel' ? 'cancelar' : 'concluir'} esta consulta com o paciente <strong>{name}</strong> no dia {date} às {hour}?
                 <br />
                 Esta ação não pode ser desfeita.
             </div>
             <div className="flex justify-end space-x-2 pt-4">
                 <Button onClick={onCancel} disabled={isLoading} className='cursor-pointer'>
-                    Cancelar
+                    Desistir
                 </Button>
                 <Button
                     onClick={onConfirm}
@@ -38,7 +44,7 @@ return (
                     disabled={isLoading}
                     className='cursor-pointer'
                 >
-                    {isLoading ? 'Deletando...' : 'Deletar'}
+                    {isLoading ? (type === 'cancel' ? 'Cancelando...' : 'Concluindo...') : (type === 'cancel' ? 'Cancelar consulta' : 'Concluir consulta')}
                 </Button>
             </div>
         </DialogContent>
