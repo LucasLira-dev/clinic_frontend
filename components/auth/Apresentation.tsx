@@ -13,7 +13,7 @@ export const Apresentation = () => {
 
                 <div className="flex flex-col gap-2 ">
                     <h2 className="text-muted- font-bold text-3xl">
-                        Cuide da sua saúde com praticide e confiança.
+                        Cuide da sua saúde com praticidade e confiança.
                     </h2>
                     <p className="text-muted/80">
                         Agende suas consultas, acompanhe seus atendimentos e tenha acesso aos melhores profissionais de saúde em um só lugar. Sua jornada para uma vida mais saudável começa aqui.

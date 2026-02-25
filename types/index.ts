@@ -179,3 +179,20 @@ export const WEEKDAY_INDEX: Record<string, number> = {
   FRI: 5,
   SAT: 6,
 }
+
+
+export type AppointmentFilter = "all" | "upcoming" | "completed" | "canceled"
+
+export type AppointmentStatus = "SCHEDULED" | "COMPLETED" | "CANCELED" | "NO_SHOW"
+
+export type UserRole = "patient" | "doctor" | "admin"
+
+export type AppointmentItem = {
+  id: string
+  appointmentDay: string
+  status: AppointmentStatus
+  doctorProfile: {
+    fullName: string
+    specialty: string
+  }
+}

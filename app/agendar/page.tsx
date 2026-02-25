@@ -1,7 +1,33 @@
 import { Separator } from "@/components/ui/separator"
 import { ScheduleAppointmentForm } from "@/components/appointments/ScheduleAppointmentForm"
+import { redirect } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { headers } from "next/headers";
 
-export default function SchedulePage() {
+
+
+export default async function SchedulePage() {
+
+  let session = null;
+    try {
+        session = await authClient.getSession({
+          fetchOptions: {
+            headers: await headers()
+          }
+        });
+    } catch (error) {
+      console.error('Erro ao obter sessão:', error);
+    }
+    
+    if (!session) {
+      redirect('/login');
+    }
+
+    if (session.data?.user?.role !== 'patient' && session.data?.user?.role !== 'admin') {
+      redirect('/');
+    }
+  
+
   return (
     <div>
       <div className="px-6 pt-2 pb-4">
