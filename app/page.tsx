@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
+import DoctorEmail from "@/components/AccountComponents/userEmail";
 
 export default function Home() {
 
@@ -38,6 +39,8 @@ const { data: session } = authClient.useSession()
           Sair
         </Button>
       </div>
+
+      <DoctorEmail initialEmail={session.user.email || ''} />
     </div>
   );
 }

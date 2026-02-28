@@ -30,7 +30,7 @@ const navItems = [
   { href: "/consultas", label: "Minhas Consultas", icon: CalendarCheck },
   { href: "/medicos", label: "Medicos", icon: Stethoscope },
   { href: "/blog", label: "Blog dos Medicos", icon: Newspaper },
-  { href: "/medico-painel", label: "Painel do Medico", icon: Stethoscope },
+  { href: "/painel", label: "Painel", icon: Stethoscope },
   { href: "/admin", label: "Administracao", icon: ShieldCheck },
 ]
 

@@ -23,8 +23,8 @@ export default async function AppointmentsPage() {
     }
   
 
-    const userId = session.data?.user?.id;
-    const userRole = session.data?.user?.role;
+  const userId = session.data?.user?.id;
+  const userRole = session.data?.user?.role;
 
   return (
     <div>

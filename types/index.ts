@@ -196,3 +196,14 @@ export type AppointmentItem = {
     specialty: string
   }
 }
+
+
+export type MyDoctorProfile = {
+    id: string;
+    fullName: string;
+    crm: string;
+    biography: string | null;
+    profilePhoto: string | null;
+    specialty: string;
+    postsCount: number;
+}
