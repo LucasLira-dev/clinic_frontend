@@ -22,7 +22,7 @@ export const CompletedAppointmentButton = (props: CompletedAppointmentButtonProp
     const { patientName, date, hour, appointmentId, userId, userRole, disabled } = props;
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [isCancelling, setIsCancelling] = useState(false);
+    const [isCompleting, setIsCompleting] = useState(false);
 
     const queryClient = useQueryClient();
 
@@ -32,25 +32,25 @@ export const CompletedAppointmentButton = (props: CompletedAppointmentButtonProp
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['appointments', userRole, userId] });
             queryClient.invalidateQueries({ queryKey: ['appointment-details', appointmentId] });
-            setIsCancelling(false);
+            setIsCompleting(false);
             setOpenDialog(false);
                 toast.success('Consulta concluída com sucesso!');
         },
         onError: () => {
-            setIsCancelling(false);
+            setIsCompleting(false);
             setOpenDialog(false);
             toast.error('Erro ao concluir consulta. Por favor, tente novamente.');
         },
    });
 
     const handleComplete = async() => {
-        setIsCancelling(true);
+        setIsCompleting(true);
 
         try {
             await completeAppointmentMutation.mutateAsync({ appointmentId });
         } catch (error) {
             console.error('Erro ao concluir consulta:', error);
-            setIsCancelling(false);
+            setIsCompleting(false);
         }
     }
 
@@ -63,7 +63,7 @@ export const CompletedAppointmentButton = (props: CompletedAppointmentButtonProp
 
             <AppointmentDialog
                 open={openDialog}
-                isLoading={isCancelling}
+                isLoading={isCompleting}
                 onCancel={() => setOpenDialog(false)}
                 onConfirm={handleComplete}
                 name={patientName}
