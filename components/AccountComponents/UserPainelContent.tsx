@@ -6,6 +6,10 @@ import { getDoctorProfile } from "@/services/doctorService";
 import DoctorBiography from "./doctorComponents/DoctorBiography";
 import UserEmail from "./userEmail";
 import { UserPainelHeader } from "./UserPainelHeader";
+import { UpdateUserPassword } from "./UpdateUserPassword";
+import { DeleteAccount } from "./DeleteAccount";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { DoctorsBlogHighlight } from "./DoctorsBlogHighlight";
 
 interface UserPainelContentProps {
     userEmail: string;
@@ -13,9 +17,12 @@ interface UserPainelContentProps {
     userName: string;
     profilePhoto: string | null;
     createdAt: string;
+    hasSocialLogin: boolean;
 }
 
-export const UserPainelContent = ({ userEmail, userRole, userName, profilePhoto, createdAt }: UserPainelContentProps) => {
+export const UserPainelContent = ({ userEmail, userRole, userName, profilePhoto, createdAt, hasSocialLogin }: UserPainelContentProps) => {
+
+    const isMobile = useIsMobile();
 
     const { data: doctorProfile, isLoading, isError } = useQuery({
         queryKey: ['doctorProfile'],
@@ -43,9 +50,25 @@ export const UserPainelContent = ({ userEmail, userRole, userName, profilePhoto,
                         <DoctorBiography initialBiography={doctorProfile?.biography || ''}/>
                     )
                 }
-                <div className="border shadow-md max-w-2xl p-6 rounded-lg bg-primary-foreground/80 flex flex-col gap-3">
-                    <UserEmail initialEmail={userEmail || ''} />
-                </div>
+                {isMobile ? (
+                    <div className="flex flex-col md:flex-row gap-6">
+                        <UserEmail initialEmail={userEmail || ''} />
+                        {
+                            hasSocialLogin ? <DoctorsBlogHighlight /> : <UpdateUserPassword hasSocialLogin={hasSocialLogin} />
+                        }
+                        <DeleteAccount userName={userName} />
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-6">
+                            <UserEmail initialEmail={userEmail || ''} />
+                            <DeleteAccount userName={userName} />
+                        </div>
+                        {
+                            hasSocialLogin ? <DoctorsBlogHighlight /> : <UpdateUserPassword hasSocialLogin={hasSocialLogin} />
+                        }
+                    </div>
+                )}
             </div>
         </div>
     )

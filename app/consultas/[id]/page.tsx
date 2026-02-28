@@ -22,7 +22,7 @@ export default async function AppointmentsPage({params }: {
     console.error('Erro ao obter sessão:', error);
   }
 
-  if (!session) {
+  if (session === undefined) {
     redirect('/login');
   }
 
