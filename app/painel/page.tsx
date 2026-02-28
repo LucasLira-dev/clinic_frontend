@@ -17,15 +17,29 @@ export default async function DoctorPainel() {
         console.error('Erro ao obter sessão:', error);
     }
       
-    if (!session) {
+    if (session === undefined) {
+        console.log('Nenhuma sessão encontrada. Redirecionando para login.');
         redirect('/login');
     }
 
-    const userEmail = session.data?.user.email;
-    const userRole = session.data?.user.role;
-    const userName = session.data?.user.name;
-    const profilePhoto = session.data?.user.image;
-    const createdAt = session.data?.user.createdAt;
+    const accountsResponse = await authClient.listAccounts(
+        {
+            fetchOptions: {
+                headers: await headers()
+        }
+    });
+    const accounts = accountsResponse.data || [];
+    const socialAccounts = accounts.filter(account => account.providerId !== 'credential');
+    const hasSocialLogin = socialAccounts.length > 0;
+
+    console.log('Accounts:', accountsResponse);
+    console.log('Has social login:', hasSocialLogin);
+
+    const userEmail = session?.data?.user.email;
+    const userRole = session?.data?.user.role;
+    const userName = session?.data?.user.name;
+    const profilePhoto = session?.data?.user.image;
+    const createdAt = session?.data?.user.createdAt;
       
     return (
         <div>
@@ -33,7 +47,7 @@ export default async function DoctorPainel() {
                 <h1 className="text-3xl font-bold tracking-tight">Painel</h1>
             </div>
             <Separator />
-            <UserPainelContent userEmail={userEmail || ''} userRole={userRole || ''} userName={userName || ''} profilePhoto={profilePhoto || null} createdAt={createdAt ? createdAt.toString() : ''} />
+            <UserPainelContent userEmail={userEmail || ''} userRole={userRole || ''} userName={userName || ''} profilePhoto={profilePhoto || null} createdAt={createdAt ? createdAt.toString() : ''} hasSocialLogin={hasSocialLogin} />
             </div>
         )
 }

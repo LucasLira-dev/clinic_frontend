@@ -18,13 +18,13 @@ export default async function AppointmentsPage() {
       console.error('Erro ao obter sessão:', error);
     }
   
-    if (!session) {
+    if (session === undefined) {
       redirect('/login');
     }
   
 
-  const userId = session.data?.user?.id;
-  const userRole = session.data?.user?.role;
+  const userId = session?.data?.user?.id;
+  const userRole = session?.data?.user?.role;
 
   return (
     <div>

@@ -19,14 +19,13 @@ export default async function SchedulePage() {
       console.error('Erro ao obter sessão:', error);
     }
     
-    if (!session) {
+    if (session === undefined) {
       redirect('/login');
     }
 
-    if (session.data?.user?.role !== 'patient' && session.data?.user?.role !== 'admin') {
+    if (session?.data?.user?.role !== 'patient' && session?.data?.user?.role !== 'admin') {
       redirect('/');
     }
-  
 
   return (
     <div>

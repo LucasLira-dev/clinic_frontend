@@ -57,8 +57,11 @@ const DoctorEmail: React.FC<DoctorEmailProps> = ({
     };
 
     return (
-        <div className="p-6 rounded-lg flex flex-col gap-2">
+        <div className="p-6 rounded-lg w-full flex flex-col gap-4 border shadow-md bg-primary-foreground/80 ">
             <h3 className="font-bold text-lg text-primary">Email</h3>
+            <p className="text-sm text-muted-foreground">
+                Para alterar seu e-mail, clique em &quot;Editar&ldquo;. Você receberá um link de confirmação no seu e-mail atual para validar a mudança.
+            </p>
             <Input
                 value={email}
                 onChange={e => setEmail(e.target.value)}

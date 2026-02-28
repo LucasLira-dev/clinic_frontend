@@ -29,14 +29,14 @@ return (
                 Esta ação não pode ser desfeita.
             </div>
             <div className="flex justify-end space-x-2 pt-4">
-                <Button onClick={onCancel} disabled={isLoading} className='cursor-pointer'>
+                <Button onClick={onCancel} disabled={isLoading} className='cursor-pointer font-bold'>
                     Cancelar
                 </Button>
                 <Button
                     onClick={onConfirm}
                     variant="destructive"
                     disabled={isLoading}
-                    className='cursor-pointer'
+                    className='cursor-pointer font-bold'
                 >
                     {isLoading ? 'Deletando...' : 'Deletar'}
                 </Button>
