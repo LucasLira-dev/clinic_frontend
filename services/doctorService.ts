@@ -1,4 +1,5 @@
-import { AllDoctorsListItem, AllDoctorsResponse, MyDoctorProfile } from "@/types";
+import { AllDoctorsListItem, AllDoctorsResponse, DoctorProfileDetails, MyDoctorProfile } from "@/types";
+import { id } from "date-fns/locale";
 
 export const getDoctorProfile = async () => {
     try {
@@ -107,6 +108,30 @@ export const getAllDoctors = async () => {
     }
     catch (error) {
         console.error('Erro ao obter lista de médicos:', error);
+        throw error;
+    }
+}
+
+export const getDoctorDetailsById = async (id: string) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/doctorProfile/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro ao obter detalhes do médico');
+        }
+
+        const doctorDetails: DoctorProfileDetails = await response.json();
+        return doctorDetails;   
+    }
+    catch (error) {
+        console.error('Erro ao obter detalhes do médico:', error);
         throw error;
     }
 }

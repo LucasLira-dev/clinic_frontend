@@ -234,3 +234,26 @@ export type AllDoctorsListItem = {
     specialty: string;
     workingDaysCount: number;
 }
+
+export type DoctorProfileDetails = {
+    id: string;
+    fullName: string;
+    crm: string;
+    biography: string | null;
+    profilePhoto: string | null;
+    specialty: string;
+    weeklyAppointments: number;
+    daysOfWork: number;
+    workingDays: [
+        day: {
+            dayOfWeek: string;
+        }
+    ]
+    slots: string[];
+    posts: {
+        id: string;
+        title: string;
+        content: string;
+        createdAt: string;
+    }[];
+}

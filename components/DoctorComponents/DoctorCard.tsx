@@ -3,6 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "../ui/card"
 import { FaStar } from "react-icons/fa"
 import { Button } from "../ui/button"
 import Image from "next/image"
+import Link from "next/link"
 
 interface DoctorCardProps {
     id: string;
@@ -22,16 +23,16 @@ export const DoctorCard = ({ doctor }: { doctor: DoctorCardProps }) => {
         <Card className="w-full h-full flex flex-col gap-2 hover:border-chart-2 hover:shadow-lg transition-shadow">
             <CardHeader className="flex items-center gap-4">
                 <div className="rounded-full bg-muted">
-                    {/* Placeholder para a foto do médico */} 
-                    {doctor.profilePhoto ? 
+                    {/* Placeholder para a foto do medico */}
+                    {doctor.profilePhoto ?
                     (
-                        <Image 
-                        src={doctor.profilePhoto} 
-                        alt="Foto do Médico" 
+                        <Image
+                        src={doctor.profilePhoto}
+                        alt="Foto do Medico"
                         width={48}
                         height={48}
                         className="rounded-full object-cover w-12 h-12"/> )
-                    : 
+                    :
                     (
                         <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
                             <span className="text-xs font-medium text-muted-foreground">{doctorInitials}</span>
@@ -60,8 +61,12 @@ export const DoctorCard = ({ doctor }: { doctor: DoctorCardProps }) => {
                 </div>
             </CardContent>
             <CardFooter className="flex flex-row justify-end gap-2 mt-4">
-               <Button variant="outline" className="cursor-pointer">Ver perfil</Button>
-               <Button variant="default" className="bg-chart-2 cursor-pointer">Agendar</Button> 
+               <Button asChild variant="outline" className="cursor-pointer">
+                    <Link href={`/medicos/${doctor.id}`}>Ver perfil</Link>
+               </Button>
+               <Button variant="default" className="bg-chart-2 hover:bg-chart-2/70 cursor-pointer">
+                    <Link href={`/agendar?doctorId=${doctor.id}`}> Agendar </Link>
+                </Button>
             </CardFooter>
         </Card>
     )

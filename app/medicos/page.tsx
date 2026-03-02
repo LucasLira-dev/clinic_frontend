@@ -14,7 +14,7 @@ export default async function MedicosPage() {
             }
         });
     } catch (error) {
-        console.error('Erro ao obter sessão:', error);
+        console.error('Erro ao obter sessao:', error);
     }
 
     if (!session?.data) {
@@ -24,7 +24,7 @@ export default async function MedicosPage() {
     return (
         <div>
             <div className="px-6 pt-2 pb-4">
-                <h1 className="text-3xl font-bold tracking-tight">Minhas Consultas</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Medicos</h1>
             </div>
             <Separator />
             <DoctorsContent />
