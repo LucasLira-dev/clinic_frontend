@@ -17,7 +17,7 @@ export default async function DoctorPainel() {
         console.error('Erro ao obter sessão:', error);
     }
       
-    if (session === undefined) {
+    if (!session?.data) {
         console.log('Nenhuma sessão encontrada. Redirecionando para login.');
         redirect('/login');
     }

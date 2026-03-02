@@ -1,4 +1,4 @@
-import { MyDoctorProfile } from "@/types";
+import { AllDoctorsListItem, AllDoctorsResponse, MyDoctorProfile } from "@/types";
 
 export const getDoctorProfile = async () => {
     try {
@@ -69,6 +69,44 @@ export const updateDoctorBiography = async(biography: string) => {
     }
     catch (error) {
         console.error('Erro ao atualizar biografia do médico:', error);
+        throw error;
+    }
+}
+
+
+export const getAllDoctors = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro ao obter lista de médicos');
+        }
+
+        const doctors: AllDoctorsResponse[] = await response.json();
+
+        const mappedDoctors: AllDoctorsListItem[] = doctors.map((doctor) => ({
+            id: doctor.id,
+            fullName: doctor.fullName,
+            specialty: doctor.specialties.find(s => s.isPrimary)?.specialty.name || 'Especialidade não informada',
+            crm: doctor.crm,
+            biography: doctor.biography,
+            profilePhoto: doctor.profilePhoto,
+            workingDaysCount: doctor._count.workingDays
+        }))
+
+        console.log('Lista de médicos mapeada:', mappedDoctors);
+
+        return mappedDoctors;
+    }
+    catch (error) {
+        console.error('Erro ao obter lista de médicos:', error);
         throw error;
     }
 }
