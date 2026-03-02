@@ -207,3 +207,30 @@ export type MyDoctorProfile = {
     specialty: string;
     postsCount: number;
 }
+
+export type AllDoctorsResponse = {
+    id: string;
+    fullName: string;
+    crm: string;
+    biography: string | null;
+    profilePhoto: string | null;
+    specialties: {
+        isPrimary: boolean;
+        specialty: {
+            name: string;
+        };
+    }[];
+    _count: {
+        workingDays: number;
+    };
+}
+
+export type AllDoctorsListItem = {
+    id: string;
+    fullName: string;
+    crm: string;
+    biography: string | null;
+    profilePhoto: string | null;
+    specialty: string;
+    workingDaysCount: number;
+}

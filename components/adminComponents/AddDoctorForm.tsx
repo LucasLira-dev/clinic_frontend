@@ -14,13 +14,11 @@ import { Button } from "../ui/button";
 
 const especialidades = [
   "Cardiologia",
-  "Dermatologia",
   "Ortopedia",
   "Pediatria",
-  "Neurologia",
   "Ginecologia",
   "Psiquiatria",
-  "Oftalmologia",
+  "Nutrição",
 ]
 
 const diasSemana: DayOfWeek[] = [

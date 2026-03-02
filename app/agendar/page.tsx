@@ -19,7 +19,7 @@ export default async function SchedulePage() {
       console.error('Erro ao obter sessão:', error);
     }
     
-    if (session === undefined) {
+    if (!session?.data) {
       redirect('/login');
     }
 

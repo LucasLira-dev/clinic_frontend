@@ -1,8 +1,10 @@
+import { DoctorsContent } from "@/components/DoctorComponents/DoctorsContent";
+import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function ConfirmDeletePage() {
+export default async function MedicosPage() {
 
     let session = null;
     try {
@@ -18,16 +20,14 @@ export default async function ConfirmDeletePage() {
     if (!session?.data) {
         redirect('/login');
     }
-      
 
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center p-6 max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Confirmar Exclusão de Conta</h1>
-        <p className="text-muted-foreground">
-          Verifique seu e-mail para confirmar a exclusão da conta.
-        </p>
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <div className="px-6 pt-2 pb-4">
+                <h1 className="text-3xl font-bold tracking-tight">Minhas Consultas</h1>
+            </div>
+            <Separator />
+            <DoctorsContent />
+        </div>
+    )
 }
