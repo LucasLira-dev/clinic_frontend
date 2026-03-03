@@ -1,5 +1,4 @@
 import { AllDoctorsListItem, AllDoctorsResponse, DoctorProfileDetails, MyDoctorProfile } from "@/types";
-import { id } from "date-fns/locale";
 
 export const getDoctorProfile = async () => {
     try {
