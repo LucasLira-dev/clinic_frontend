@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Stethoscope,
   LogOut,
+  Pencil,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { 
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/consultas", label: "Minhas Consultas", icon: CalendarCheck },
   { href: "/medicos", label: "Medicos", icon: Stethoscope },
   { href: "/blog", label: "Blog dos Medicos", icon: Newspaper },
+  { href: "/criarPost", label: "Criar Post", icon: Pencil },
   { href: "/painel", label: "Painel", icon: Stethoscope },
   { href: "/admin", label: "Administracao", icon: ShieldCheck },
 ]
@@ -107,6 +109,9 @@ export function AppSidebar() {
                 return null
               }
               if (item.href === "/agendar" && isDoctor) {
+                return null
+              }
+              if (item.href === "/criarPost" && !isDoctor) {
                 return null
               }
               return (

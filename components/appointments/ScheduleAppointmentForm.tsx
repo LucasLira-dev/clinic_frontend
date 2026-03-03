@@ -30,11 +30,19 @@ import { Calendar } from "@/components/ui/calendar"
 import { toast } from "sonner"
 import { AppointmentState, defaultState, WEEKDAY_INDEX } from "@/types"
 import { formatDateToIsoLocal, normalizeDayLabel, parseIsoDate } from "@/lib/utils"
+import { useSearchParams } from "next/navigation"
 
 
 
 export function ScheduleAppointmentForm() {
-  const [formData, setFormData] = useState<AppointmentState>(defaultState)
+
+  const searchParams = useSearchParams()
+  const preselectedDoctorId = searchParams.get('doctorId') ?? ''
+
+  const [formData, setFormData] = useState<AppointmentState>({
+    ...defaultState,
+    doctorId: preselectedDoctorId,
+  })
 
   const queryClient = useQueryClient()
 
