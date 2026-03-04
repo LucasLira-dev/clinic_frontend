@@ -32,9 +32,6 @@ export default async function DoctorPainel() {
     const socialAccounts = accounts.filter(account => account.providerId !== 'credential');
     const hasSocialLogin = socialAccounts.length > 0;
 
-    console.log('Accounts:', accountsResponse);
-    console.log('Has social login:', hasSocialLogin);
-
     const userEmail = session?.data?.user.email;
     const userRole = session?.data?.user.role;
     const userName = session?.data?.user.name;

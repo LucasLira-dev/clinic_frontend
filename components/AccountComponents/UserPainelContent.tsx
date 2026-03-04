@@ -10,6 +10,8 @@ import { UpdateUserPassword } from "./UpdateUserPassword";
 import { DeleteAccount } from "./DeleteAccount";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { DoctorsBlogHighlight } from "./DoctorsBlogHighlight";
+import { UserPainelContentSkeleton } from "../skeletons/UserPainelContentSkeleton";
+import { UserPainelContentError } from "./UserPainelContentError";
 
 interface UserPainelContentProps {
     userEmail: string;
@@ -24,18 +26,18 @@ export const UserPainelContent = ({ userEmail, userRole, userName, profilePhoto,
 
     const isMobile = useIsMobile();
 
-    const { data: doctorProfile, isLoading, isError } = useQuery({
+    const { data: doctorProfile, isLoading, isError, refetch } = useQuery({
         queryKey: ['doctorProfile'],
         queryFn: getDoctorProfile,
         enabled: userRole === 'doctor',
     })
 
     if (isLoading) {
-        return <div className="flex justify-center items-center h-64 text-muted-foreground">Carregando perfil do médico...</div>;
+        return <UserPainelContentSkeleton />
     }
 
     if (isError) {
-        return <div className="flex justify-center items-center h-64 text-red-500">Erro ao carregar perfil do médico</div>;
+        return <UserPainelContentError onRetry={refetch} userRole={userRole} />;
     }
 
     return (
