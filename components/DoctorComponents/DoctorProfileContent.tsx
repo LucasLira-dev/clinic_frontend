@@ -12,7 +12,12 @@ import { DoctorProfileError } from "./DoctorProfileError";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export const DoctorProfileContent = ({id}: {id: string}) => {
+interface DoctorProfileContentProps {
+    id: string;
+    userRole?: string;
+}
+
+export const DoctorProfileContent = ({id, userRole}: DoctorProfileContentProps) => {
 
     const { data: doctor, isLoading, isError, refetch } = useQuery({
         queryKey: ['doctorProfile', id],
@@ -64,12 +69,13 @@ export const DoctorProfileContent = ({id}: {id: string}) => {
                             </div>
                         </div>
 
-                        <Button asChild className="h-11 bg-chart-2 px-5 text-sm font-semibold hover:bg-chart-2/90">
-                            <Link href={`/agendar?doctorId=${doctor.id}`}>
-                                <CalendarPlus2 className="size-4" />
-                                Agendar Consulta
-                            </Link>
-                        </Button>
+                        {
+                            (userRole === 'patient' || userRole === 'admin') && (
+                                <Button variant="default" className="bg-chart-2 hover:bg-chart-2/70 cursor-pointer">
+                                    <Link href={`/agendar?doctorId=${doctor.id}`}> Agendar Consulta </Link>
+                                </Button>
+                            )
+                        }
                     </div>
 
                     <div className="grid gap-6 lg:grid-cols-[1fr_290px]">
@@ -89,7 +95,7 @@ export const DoctorProfileContent = ({id}: {id: string}) => {
                                         doctor.workingDays.map((day) => (
                                             <span
                                                 key={day.dayOfWeek}
-                                                className="rounded-full border border-[hsl(172_25%_85%)] bg-[hsl(172_32%_93%)] px-3 py-1 text-sm font-semibold text-[hsl(172_66%_26%)]"
+                                                className="rounded-full border border-[hsl(172_25%_85%)] bg-[hsl(172_32%_93%)] px-3 py-1 text-[10px] font-semibold text-[hsl(172_66%_26%)]"
                                             >
                                                 {day.dayOfWeek}
                                             </span>
@@ -122,20 +128,20 @@ export const DoctorProfileContent = ({id}: {id: string}) => {
                         <aside className="h-fit rounded-xl border bg-card p-5 shadow-sm">
                             <div className="flex items-center gap-2">
                                 <Star className="size-5 fill-amber-400 text-amber-400" />
-                                <span className="text-3xl font-bold">5.00</span>
+                                <span className="text-2xl font-bold">5.00</span>
                                 <span className="text-muted-foreground">/5.0</span>
                             </div>
 
                             <Separator className="my-4" />
 
                             <div className="space-y-3">
-                                <p className="flex items-center gap-2 text-lg text-muted-foreground">
+                                <p className="flex items-center gap-2 text-md text-muted-foreground">
                                     <CalendarPlus2 className="size-4 text-primary" />
                                     <span>
                                         <strong>{doctor.weeklyAppointments} atendimentos</strong>/semana
                                     </span>
                                 </p>
-                                <p className="flex items-center gap-2 text-lg text-muted-foreground">
+                                <p className="flex items-center gap-2 text-md text-muted-foreground">
                                     <Clock3 className="size-4 text-primary" />
                                     <span>
                                         <strong>{doctor.workingDays.length} dias</strong> de atendimento
@@ -155,16 +161,28 @@ export const DoctorProfileContent = ({id}: {id: string}) => {
                     </h2>
 
                     {doctor.posts.length > 0 ? (
-                        doctor.posts.map((post) => (
-                            <article
-                                key={post.id}
-                                className="space-y-2 rounded-xl border bg-background p-5"
-                            >
-                                <h3 className="text-2xl font-semibold tracking-tight">{post.title}</h3>
-                                <p className="text-base leading-7 text-muted-foreground">{post.content}</p>
-                                <p className="text-sm text-muted-foreground">{post.createdAt}</p>
-                            </article>
-                        ))
+                        doctor.posts.map((post) => {
+                            const date = new Date(post.createdAt);
+                            const formattedDate = date.toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: 'long',
+                                year: 'numeric',
+                            });
+
+                            return (
+                                <article
+                                    key={post.id}
+                                    className="space-y-2 rounded-xl border bg-background p-5"
+                                >
+                                    <Link
+                                        href={`/blog/${post.id}`}>
+                                        <h3 className="text-md text-chart-2 font-semibold tracking-tight">{post.title}</h3>
+                                        <p className="text-base leading-7 text-muted-foreground">{post.description}</p>
+                                        <p className="text-sm text-muted-foreground">{formattedDate}</p>
+                                    </Link>
+                                </article>
+                            );
+                        })
                     ) : (
                         <p className="rounded-xl border bg-background p-5 text-sm text-muted-foreground">
                             Este medico ainda nao possui publicacoes.

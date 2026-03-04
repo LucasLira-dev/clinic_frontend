@@ -253,7 +253,76 @@ export type DoctorProfileDetails = {
     posts: {
         id: string;
         title: string;
-        content: string;
+        description: string;
         createdAt: string;
     }[];
+}
+
+
+export type BlogPostsResponse = {
+    id: string;
+    title: string;
+    description: string;
+    tag: string;
+    createdAt: string;
+    doctorProfile: {
+        id: string;
+        fullName: string;
+        profilePhoto: string;
+        specialties: {
+            isPrimary: boolean;
+            specialty: {
+                name: string;
+            };
+        }[];
+    }
+}
+
+export type BlogPostListItem = {
+    id: string;
+    title: string;
+    description: string;
+    tag: string;
+    createdAt: string;
+    doctorProfile: {
+        id: string;
+        fullName: string;
+        profilePhoto: string;
+        specialty: string;
+    }
+}
+
+export type PostDetailsResponse = {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    tag: string;
+    createdAt: string;
+    doctorProfile: {
+        id: string;
+        fullName: string;
+        profilePhoto: string;
+        specialties: {
+            isPrimary: boolean;
+            specialty: {
+                name: string;
+            };
+        }[];
+    }
+}
+
+export type PostDetails = {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    tag: string;
+    createdAt: string;
+    doctorProfile: {
+        id: string;
+        fullName: string;
+        profilePhoto: string;
+        specialty: string;
+    }
 }

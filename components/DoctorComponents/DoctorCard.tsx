@@ -2,7 +2,6 @@ import { Calendar } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card"
 import { FaStar } from "react-icons/fa"
 import { Button } from "../ui/button"
-import Image from "next/image"
 import Link from "next/link"
 
 interface DoctorCardProps {
@@ -13,6 +12,7 @@ interface DoctorCardProps {
     biography: string | null;
     profilePhoto: string | null;
     workingDaysCount: number;
+    disableScheduling?: boolean;
 }
 
 export const DoctorCard = ({ doctor }: { doctor: DoctorCardProps }) => {
@@ -26,11 +26,10 @@ export const DoctorCard = ({ doctor }: { doctor: DoctorCardProps }) => {
                     {/* Placeholder para a foto do medico */}
                     {doctor.profilePhoto ?
                     (
-                        <Image
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
                         src={doctor.profilePhoto}
                         alt="Foto do Medico"
-                        width={48}
-                        height={48}
                         className="rounded-full object-cover w-12 h-12"/> )
                     :
                     (
@@ -64,9 +63,13 @@ export const DoctorCard = ({ doctor }: { doctor: DoctorCardProps }) => {
                <Button asChild variant="outline" className="cursor-pointer">
                     <Link href={`/medicos/${doctor.id}`}>Ver perfil</Link>
                </Button>
-               <Button variant="default" className="bg-chart-2 hover:bg-chart-2/70 cursor-pointer">
-                    <Link href={`/agendar?doctorId=${doctor.id}`}> Agendar </Link>
-                </Button>
+                {
+                    !doctor.disableScheduling && (
+                        <Button variant="default" className="bg-chart-2 hover:bg-chart-2/70 cursor-pointer">
+                            <Link href={`/agendar?doctorId=${doctor.id}`}> Agendar </Link>
+                        </Button>
+                    )
+                }
             </CardFooter>
         </Card>
     )

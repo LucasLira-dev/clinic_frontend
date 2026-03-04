@@ -1,10 +1,10 @@
-import { DoctorsContent } from "@/components/DoctorComponents/DoctorsContent";
+import { BlogContent } from "@/components/BlogComponents/BlogContent";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/auth-client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-export default async function MedicosPage() {
+export default async function BlogPage() {
 
     let session = null;
     try {
@@ -21,15 +21,14 @@ export default async function MedicosPage() {
         redirect('/login');
     }
 
-    const userRole = session?.data?.user?.role;
-
     return (
         <div>
             <div className="px-6 pt-2 pb-4">
-                <h1 className="text-3xl font-bold tracking-tight">Medicos</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Blog</h1>
             </div>
             <Separator />
-            <DoctorsContent userRole={userRole || ''} />
+            {/* <BlogContent/> */}
+            <BlogContent />
         </div>
     )
 }
