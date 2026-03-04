@@ -3,11 +3,14 @@
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { Card, CardContent, CardFooter } from "../ui/card"
-import { CalendarPlus2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query";
-import { getPostById } from "@/services/blogService";
+import { CalendarPlus2, Trash2 } from "lucide-react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deletePostById, getPostById } from "@/services/blogService";
 import { PostContentSkeleton } from "../skeletons/PostContentSkeleton";
 import { PostContentError } from "./PostContentError";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface PostContentProps {
     postId: string;
@@ -16,9 +19,25 @@ interface PostContentProps {
 
 export const PostContent = ({postId, userRole}: PostContentProps) => {
 
+    const queryClient = useQueryClient();
+    const router = useRouter();
+
     const {data: postData, isLoading, error, refetch} = useQuery({
         queryKey: ['post', postId],
         queryFn: () => getPostById(postId),
+    })
+
+    const { mutate: deletePost, isPending: isDeleting } = useMutation({
+        mutationFn: () => deletePostById(postId),
+        onSuccess: () => {
+            toast.success('Post deletado com sucesso');
+            queryClient.invalidateQueries({ queryKey: ['blogPosts']});
+            queryClient.invalidateQueries({ queryKey: ['post', postId]});
+            router.push('/blog');
+        },
+        onError: () => {
+            toast.error('Erro ao deletar o post');
+        }
     })
 
     if (isLoading) {
@@ -37,6 +56,8 @@ export const PostContent = ({postId, userRole}: PostContentProps) => {
         month: 'long',
         year: 'numeric'
     });
+
+    const canDelete = userRole === 'doctor' && postData?.doctorProfile.id === postData?.doctorProfile.id || userRole === 'admin';
 
     return (
         <div className="mx-auto mt-5 grid w-full max-w-6xl gap-6 px-6">
@@ -68,6 +89,39 @@ export const PostContent = ({postId, userRole}: PostContentProps) => {
                             </div>
                         </div>
                         <p className="text-sm text-muted-foreground">Publicado em {publicationDate}</p>
+
+                        {canDelete && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        className="cursor-pointer mt-6 max-w-30 justify-center"
+                                        disabled={isDeleting}
+                                    >
+                                        <Trash2 className="size-4 mr-1" />
+                                        Deletar
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle >Deseja realmente deletar este post?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Essa ação não pode ser desfeita.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={() => deletePost()}
+                                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        >
+                                            {isDeleting ? 'Deletando...' : 'Deletar'}
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                     </div>
 
                     <div className="flex flex-col gap-4">

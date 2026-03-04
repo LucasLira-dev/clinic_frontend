@@ -110,3 +110,29 @@ export const getPostById = async (id: string) => {
         throw Error("Erro ao buscar o post. Por favor, tente novamente.")
     }
 }
+
+
+export const deletePostById = async (id: string) => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw Error(errorData.message || "Erro ao deletar o post. Por favor, tente novamente.")
+        }
+
+        return {
+            message: "Post deletado com sucesso!"
+        }
+    }
+    catch (error) {
+        console.log("Error deleting post:", error)
+        throw Error("Erro ao deletar o post. Por favor, tente novamente.")
+    }
+}
