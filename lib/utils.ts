@@ -90,3 +90,23 @@ export function formatDateParts(isoDate?: string) {
     }),
   }
 }
+
+export const weekdayOrder = [
+  'DOMINGO',
+  'SEGUNDA',
+  'TERCA',
+  'QUARTA',
+  'QUINTA',
+  'SEXTA',
+  'SABADO'
+]
+
+export const weekdayLabels = {
+  DOMINGO: 'Domingo',
+  SEGUNDA: 'Segunda',
+  TERCA: 'Terça',
+  QUARTA: 'Quarta',
+  QUINTA: 'Quinta',
+  SEXTA: 'Sexta',
+  SABADO: 'Sábado'
+}

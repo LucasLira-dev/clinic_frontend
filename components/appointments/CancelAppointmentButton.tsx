@@ -9,7 +9,7 @@ import { cancelAppointment } from "@/services/appointmentsService";
 import { toast } from "sonner";
 
 interface CancelAppointmentButtonProps {
-    doctorName: string;
+    name: string;
     date: string;
     hour: string;
     appointmentId: string;
@@ -18,7 +18,7 @@ interface CancelAppointmentButtonProps {
     disabled?: boolean;
 }
 
-export const CancelAppointmentButton = ({ doctorName, date, hour, appointmentId, userId, userRole, disabled }: CancelAppointmentButtonProps) => {
+export const CancelAppointmentButton = ({ name, date, hour, appointmentId, userId, userRole, disabled }: CancelAppointmentButtonProps) => {
 
     const [openDialog, setOpenDialog] = useState(false);
     const [isCancelling, setIsCancelling] = useState(false);
@@ -65,7 +65,7 @@ export const CancelAppointmentButton = ({ doctorName, date, hour, appointmentId,
                 isLoading={isCancelling}
                 onCancel={() => setOpenDialog(false)}
                 onConfirm={handleCancel}
-                name={doctorName}
+                name={name}
                 date={date}
                 hour={hour}
                 type="cancel"

@@ -5,7 +5,6 @@ import { getAppointmentDetails } from "@/services/appointmentsService";
 import { UserRole } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, CalendarClock, Stethoscope, User } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
 import { Separator } from "../ui/separator";
 import { CancelAppointmentButton } from "./CancelAppointmentButton";
@@ -112,11 +111,10 @@ export const AppointmentDetails = ({ appointmentId, userId, userRole }: Appointm
                             <div className="flex items-center gap-4 mt-2 border border-border rounded-lg px-4 py-2 bg-white">
                                 <figure className="flex items-center">
                                     {appointmentDetails?.profilePhoto ? (
-                                        <Image
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img
                                             src={appointmentDetails.profilePhoto}
                                             alt={`Foto do médico ${appointmentDetails?.doctorName || ""}`}
-                                            width={48}
-                                            height={48}
                                             className="rounded-full object-cover w-12 h-12"
                                         />
                                     ) : (
@@ -144,7 +142,7 @@ export const AppointmentDetails = ({ appointmentId, userId, userRole }: Appointm
                         {
                             !buttonDisabled && (
                                 <CancelAppointmentButton 
-                                doctorName={appointmentDetails?.doctorName || "Nome do médico não informado"} 
+                                name={userRole === "doctor" ? appointmentDetails?.patientName || "Nome do paciente não informado" : appointmentDetails?.doctorName || "Nome do médico não informado"} 
                                 date={dateParts?.fullDate|| "Data não informada"} 
                                 hour={dateParts?.hour || "Horário não informado"} 
                                 appointmentId={appointmentDetails?.id || ""}

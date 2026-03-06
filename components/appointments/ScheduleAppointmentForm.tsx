@@ -54,7 +54,7 @@ export function ScheduleAppointmentForm() {
 
       setFormData(defaultState)
 
-      toast.success('Consulta solicitada com sucesso! Aguarde a confirmacao do medico.')
+      toast.success('Consulta marcada com sucesso!')
     },
     onError: (error) => {
       console.error('Erro ao agendar consulta:', error)
@@ -150,22 +150,11 @@ export function ScheduleAppointmentForm() {
   return (
     <div className="mx-auto w-full max-w-3xl space-y-6 p-6 pt-2 mt-5">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Solicitar Consulta</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Marcar Consulta</h1>
         <p className="text-muted-foreground mt-2">
-          Preencha os dados abaixo para solicitar um agendamento.
+          Preencha os dados abaixo para marcar uma consulta.
         </p>
       </div>
-
-      <Card className="border-chart-2/30 bg-chart-2/10 py-4">
-        <CardContent className="flex items-start gap-3 px-4">
-          <CircleAlert className="mt-0.5 size-4 shrink-0 text-chart-2" />
-          <p className="text-sm leading-relaxed">
-            Apos enviar a solicitacao, o medico ira analisar e confirmar a
-            consulta. Voce recebera uma notificacao por e-mail assim que houver
-            uma resposta.
-          </p>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>

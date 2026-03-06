@@ -1,4 +1,4 @@
-import { Doctor, DoctorApiResponse, DoctorDetails } from "@/types";
+import { DashboardStatsResponse, Doctor, DoctorApiResponse, DoctorDetails } from "@/types";
 
 import { AppointmentItem, AppointmentFilter, AppointmentStatus, UserRole } from "@/types";
 
@@ -306,5 +306,33 @@ export const completeAppointment = async (appointmentId: string): Promise<{ mess
     catch (error) {
         console.error('Erro ao concluir consulta:', error);
         throw new Error('Erro ao concluir consulta. Por favor, tente novamente.');
+    }
+}
+
+
+export const getDashboardStats = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/dashboard`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro ao buscar estatísticas do dashboard');
+        }
+
+        const data: DashboardStatsResponse = await response.json();
+
+        console.log('Dashboard stats:', data);
+
+        return data;
+    }
+    catch (error) {
+        console.error('Erro ao buscar estatísticas do dashboard:', error);
+        throw new Error('Erro ao buscar estatísticas do dashboard. Por favor, tente novamente.');
     }
 }
