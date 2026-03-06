@@ -30,7 +30,7 @@ return (
                 <DialogTitle>{type === 'cancel' ? 'Confirmar Cancelamento' : 'Confirmar Conclusão'}</DialogTitle>
             </DialogHeader>
             <div className="text-sm text-muted-foreground">
-                Tem certeza de que deseja {type === 'cancel' ? 'cancelar' : 'concluir'} esta consulta com o paciente <strong>{name}</strong> no dia {date} às {hour}?
+                Tem certeza de que deseja {type === 'cancel' ? 'cancelar' : 'concluir'} esta consulta com o <strong>{name}</strong> no dia {date} às {hour}?
                 <br />
                 Esta ação não pode ser desfeita.
             </div>

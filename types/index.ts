@@ -326,3 +326,19 @@ export type PostDetails = {
         specialty: string;
     }
 }
+
+export type DashboardStatsResponse = {
+    totalWeekAppointments: number;
+    totalCompletedAppointments: number;
+    totalPatients: number;
+    totalDoctors: number;
+    appointmentsByWeekday: Record<string, number>;
+    upcomingAppointments: {
+        id: string;
+        appointmentDay: string;
+        counterpartName: string;
+        counterpartRole: string;
+        counterpartSpecialty?: string | null;
+        status: 'SCHEDULED' | 'COMPLETED' | 'CANCELED';
+    }[];
+}
