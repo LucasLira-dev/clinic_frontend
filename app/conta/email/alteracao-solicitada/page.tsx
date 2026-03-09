@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 
 function maskEmail(email: string) {
   const [local, domain] = email.split('@');
@@ -13,7 +13,7 @@ function maskEmail(email: string) {
   return `${local[0]}***${local[local.length - 1]}@${domain}`;
 }
 
-export default function EmailChangeRequestedPage() {
+function EmailChangeRequestedPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isResending, setIsResending] = useState(false);
@@ -102,5 +102,13 @@ export default function EmailChangeRequestedPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function EmailChangeRequestedPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Carregando...</div>}>
+      <EmailChangeRequestedPage />
+    </Suspense>
   );
 }
