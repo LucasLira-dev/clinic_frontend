@@ -3,7 +3,7 @@
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 function maskEmail(email: string) {
@@ -25,7 +25,7 @@ function getVerificationErrorMessage(errorCode: string) {
   return 'Não foi possível concluir a verificação deste link. Solicite um novo link para continuar.';
 }
 
-export default function EmailChangeConfirmedPage() {
+function EmailChangeConfirmedPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isResending, setIsResending] = useState(false);
@@ -154,5 +154,13 @@ export default function EmailChangeConfirmedPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function EmailChangeConfirmedPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Carregando...</div>}>
+      <EmailChangeConfirmedPage />
+    </Suspense>
   );
 }
