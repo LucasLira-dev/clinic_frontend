@@ -1,13 +1,9 @@
 import { CreatePostSchemaType } from "@/lib/schema";
 import { BlogPostListItem, BlogPostsResponse, PostDetails, PostDetailsResponse } from "@/types";
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-    throw new Error("A variável de ambiente NEXT_PUBLIC_API_URL não está definida.");
-}
-
 export const createPost = async (data: CreatePostSchemaType) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/createPost`, {
+        const response = await fetch(`/blog/createPost`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +29,7 @@ export const createPost = async (data: CreatePostSchemaType) => {
 
 export const getAllPosts = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog`, {
+        const response = await fetch(`/blog`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -73,7 +69,7 @@ export const getAllPosts = async () => {
 
 export const getPostById = async (id: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`, {
+        const response = await fetch(`/blog/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -114,7 +110,7 @@ export const getPostById = async (id: string) => {
 
 export const deletePostById = async (id: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`, {
+        const response = await fetch(`/blog/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

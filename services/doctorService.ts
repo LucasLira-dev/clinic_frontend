@@ -2,7 +2,7 @@ import { AllDoctorsListItem, AllDoctorsResponse, DoctorProfileDetails, MyDoctorP
 
 export const getDoctorProfile = async () => {
     try {
-       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/me`, {
+       const response = await fetch(`/doctor/me`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const getDoctorProfile = async () => {
 
 export const updateDoctorProfilePhoto = async(profilePhoto: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/me/photo`, {
+        const response = await fetch(`/doctor/me/photo`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const updateDoctorProfilePhoto = async(profilePhoto: string) => {
 
 export const updateDoctorBiography = async(biography: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/me/biography`, {
+        const response = await fetch(`/doctor/me/biography`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export const updateDoctorBiography = async(biography: string) => {
 
 export const getAllDoctors = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor`, {
+        const response = await fetch(`/doctor`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ export const getAllDoctors = async () => {
 
 export const getDoctorDetailsById = async (id: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/doctor/doctorProfile/${id}`, {
+        const response = await fetch(`/doctor/doctorProfile/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
