@@ -28,7 +28,7 @@ export const bookAppointmentF = async (
     time: string
 ): Promise<BookedAppointment> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/book`, {
+        const response = await fetch(`/appointments/book`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export const bookAppointmentF = async (
 
 export const getDoctors = async (): Promise<Doctor[]> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/doctors`, {
+        const response = await fetch(`/appointments/doctors`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export const getDoctors = async (): Promise<Doctor[]> => {
 
 export const getDoctorDetails = async (doctorId: string): Promise<DoctorDetails> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/doctor/${doctorId}`, {
+        const response = await fetch(`/appointments/doctor/${doctorId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ export const getDoctorAvailableSlots = async (
     date: string
 ): Promise<DoctorAvailableSlots> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/doctor/${doctorId}/available-slots?date=${date}`, {
+        const response = await fetch(`/appointments/doctor/${doctorId}/available-slots?date=${date}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export const getMyAppointments = async (
     userRole: UserRole = 'patient',
 ): Promise<AppointmentItem[]> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/my-appointments?filter=${filter}`, {
+        const response = await fetch(`/appointments/my-appointments?filter=${filter}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ export const getAppointmentDetails = async (
     userRole: UserRole = 'patient',
 ): Promise<AppointmentDetails> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/details/${appointmentId}`, {
+        const response = await fetch(`/appointments/details/${appointmentId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -258,7 +258,7 @@ export const getAppointmentDetails = async (
 
 export const cancelAppointment = async (appointmentId: string): Promise<{ message: string }> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/cancel/${appointmentId}`, {
+        const response = await fetch(`/appointments/cancel/${appointmentId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ export const cancelAppointment = async (appointmentId: string): Promise<{ messag
 
 export const completeAppointment = async (appointmentId: string): Promise<{ message: string }> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/complete/${appointmentId}`, {
+        const response = await fetch(`/appointments/complete/${appointmentId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -312,7 +312,7 @@ export const completeAppointment = async (appointmentId: string): Promise<{ mess
 
 export const getDashboardStats = async () => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/appointments/dashboard`, {
+        const response = await fetch(`/appointments/dashboard`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

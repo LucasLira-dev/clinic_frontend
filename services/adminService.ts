@@ -45,7 +45,7 @@ type PatientApiResponse = {
 
 export const createDoctor = async (doctorData: DoctorData) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/medicos`, {
+        const response = await fetch(`/admin/medicos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export const getDoctors = async (
 ): Promise<DoctorTableRow[]> => {
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/admin/users?role=doctors`,
+            `/admin/users?role=doctors`,
             {
                 method: 'GET',
                 headers: {
@@ -124,7 +124,7 @@ export const getDoctors = async (
 
 export const getPatients = async (): Promise<PatientTableRow[]> => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users?role=patients`, {
+        const response = await fetch(`/admin/users?role=patients`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ export const getPatients = async (): Promise<PatientTableRow[]> => {
 
 export const deleteUser = async (userId: string) => {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users/${userId}`, {
+        const response = await fetch(`/admin/users/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
