@@ -18,7 +18,6 @@ export default async function DoctorPainel() {
     }
       
     if (!session?.data) {
-        console.log('Nenhuma sessão encontrada. Redirecionando para login.');
         redirect('/login');
     }
 

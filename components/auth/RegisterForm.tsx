@@ -35,7 +35,6 @@ export const RegisterForm = () => {
             }
         }
         catch (error){
-            console.log("Registration error:", error)
             setError("Ocorreu um erro ao criar a conta. Por favor, tente novamente.")
         }
     }

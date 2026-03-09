@@ -327,8 +327,6 @@ export const getDashboardStats = async () => {
 
         const data: DashboardStatsResponse = await response.json();
 
-        console.log('Dashboard stats:', data);
-
         return data;
     }
     catch (error) {

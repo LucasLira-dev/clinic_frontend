@@ -61,7 +61,6 @@ export const AddDoctorForm = ({ refetchDoctors }: { refetchDoctors?: () => Promi
   const handleSubmitMedico = async (e: React.FormEvent) => {
     e.preventDefault()
     if (isSubmitting) {
-      console.log("Já está processando...")
       return
     }
     if (diasSelecionados.length === 0) {
