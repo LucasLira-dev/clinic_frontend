@@ -62,7 +62,6 @@ export const UpdateUserPassword = ({ hasSocialLogin }: { hasSocialLogin: boolean
         catch (error) {
             toast.error('Não foi possível atualizar a senha. Tente novamente mais tarde.');
             setIsSubmitting(false);
-            console.log("Error updating password:", error);
         }
     }
 

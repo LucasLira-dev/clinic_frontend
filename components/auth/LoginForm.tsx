@@ -36,7 +36,6 @@ export const LoginForm = () => {
             }
         }
         catch (error){
-            console.log("Login error:", error)
             setError("Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.")
         }
     }
