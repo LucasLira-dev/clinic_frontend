@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# Clinic Frontend
 
-First, run the development server:
+Frontend de uma aplicação de clínica, com autenticação e múltiplos perfis de usuário (**paciente**, **médico** e **admin**), agendamento de consultas, área administrativa e módulo de blog.
+
+## Stack
+
+- **Next.js** (App Router)  
+- **React 19** + **TypeScript**
+- **TailwindCSS v4** + **shadcn/ui**
+- **@tanstack/react-query** (cache e sincronização de dados)
+- **better-auth** (client auth) + plugin **adminClient**
+- **zod** (validação de formulários)
+
+## Funcionalidades (visão geral)
+
+- **Autenticação**
+  - Login/registro com validação via **Zod**
+  - Suporte a papéis de usuário: `patient`, `doctor`, `admin`
+- **Paciente**
+  - Listagem de médicos
+  - Agendamento de consulta (data + horário)
+  - Minhas consultas (filtros: próximas, concluídas, canceladas etc.)
+  - Cancelamento de consulta
+- **Médico**
+  - Visualização das consultas (modo médico)
+  - Concluir consulta
+  - Atualizar foto e biografia do perfil
+- **Admin**
+  - Criar médico
+  - Listar médicos e pacientes
+  - Remover usuário
+- **Blog**
+  - Criar post
+  - Listar posts
+  - Detalhes do post
+  - Excluir post
+
+## Requisitos
+
+- Node.js (recomendado **20+**)
+- Um backend configurado e acessível para as rotas consumidas pelo frontend (ex.: `/appointments/*`, `/admin/*`, `/doctor/*`, `/blog/*`)
+
+## Configuração (.env)
+
+Crie um arquivo `.env.local` na raiz do projeto com:
+
+```bash
+NEXT_PUBLIC_BETTER_AUTH_URL="http://localhost:3001" 
+```
+
+> Ajuste a URL para o endereço do seu backend/servidor do **better-auth**.
+
+## Como rodar
+
+Instalar dependências:
+
+```bash
+npm install
+```
+
+Rodar em desenvolvimento:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build de produção:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Lint:
 
-## Learn More
+```bash
+npm run lint
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Estrutura (alto nível)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `app/` — rotas/páginas (Next.js App Router)
+- `components/` — componentes reutilizáveis (UI)
+- `hooks/` — hooks (ex.: detecção de mobile)
+- `lib/` — utilitários, schemas, auth client
+- `services/` — camada de integração com API (fetch)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Observações sobre autenticação e papéis
 
-## Deploy on Vercel
+O client de autenticação é criado em `lib/auth-client.ts` e define campos extras de usuário, incluindo `role` (com default `patient`) e `imageCldPubId`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Papéis disponíveis:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `patient`
+- `doctor`
+- `admin`
+
+## Próximos passos (ideias)
+
+- Adicionar testes (unit/e2e)
+- Documentar endpoints esperados do backend
+- Adicionar screenshots e/ou GIFs do fluxo (login, agendamento, admin)
+- Publicar demo (Vercel) e configurar variáveis de ambiente
+
+## Autor
+
+**Lucas Lira**  
+GitHub: https://github.com/LucasLira-dev
