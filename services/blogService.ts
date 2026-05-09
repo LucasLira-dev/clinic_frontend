@@ -1,9 +1,11 @@
 import { CreatePostSchemaType } from "@/lib/schema";
 import { BlogPostListItem, BlogPostsResponse, PostDetails, PostDetailsResponse } from "@/types";
 
+const BLOG_API_BASE = '/blog-api';
+
 export const createPost = async (data: CreatePostSchemaType) => {
     try {
-        const response = await fetch(`/blog/createPost`, {
+        const response = await fetch(`${BLOG_API_BASE}/createPost`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,7 +31,7 @@ export const createPost = async (data: CreatePostSchemaType) => {
 
 export const getAllPosts = async () => {
     try {
-        const response = await fetch(`/blog`, {
+        const response = await fetch(BLOG_API_BASE, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +71,7 @@ export const getAllPosts = async () => {
 
 export const getPostById = async (id: string) => {
     try {
-        const response = await fetch(`/blog/${id}`, {
+        const response = await fetch(`${BLOG_API_BASE}/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -110,7 +112,7 @@ export const getPostById = async (id: string) => {
 
 export const deletePostById = async (id: string) => {
     try {
-        const response = await fetch(`/blog/${id}`, {
+        const response = await fetch(`${BLOG_API_BASE}/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
