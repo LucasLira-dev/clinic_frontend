@@ -29,7 +29,7 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://upload-widget.cloudinary.com",
+      "script-src 'self' 'unsafe-inline' https://upload-widget.cloudinary.com",
       "style-src 'self' 'unsafe-inline' https://upload-widget.cloudinary.com",
       "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com https://avatars.githubusercontent.com",
       "font-src 'self'",
@@ -37,6 +37,10 @@ const securityHeaders = [
       "worker-src blob:",
       "frame-src 'self' https://accounts.google.com https://github.com https://upload-widget.cloudinary.com",
       "frame-ancestors 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "upgrade-insecure-requests",
     ].join('; '),
   },
 ];
