@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Apresentation } from "@/components/auth/Apresentation";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { SocialLogin } from "@/components/auth/SocialLogin";
@@ -6,6 +9,8 @@ import { Stethoscope } from "lucide-react";
 import Link from "next/link";
 
 export default function Register() {
+    const [isAuthPending, setIsAuthPending] = useState(false)
+
     return (
         <div className="lg:flex flex-row w-full h-screen">
             <div className="hidden lg:flex w-full">
@@ -27,14 +32,20 @@ export default function Register() {
                         <p className="text-muted-foreground text-sm ">
                             Crie sua conta para acessar a plataforma
                         </p>
-                        <SocialLogin />
+                        <SocialLogin
+                            disabled={isAuthPending}
+                            onLoadingChange={setIsAuthPending}
+                        />
                     </div>
                     <div className="flex items-center justify-center gap-3 mt-5 w-full">
                         <Separator className="flex-1" />
                         <span className="text-xs text-muted-foreground">ou</span>
                         <Separator className="flex-1" />
                     </div>
-                    <RegisterForm />
+                    <RegisterForm
+                        disabled={isAuthPending}
+                        onSubmittingChange={setIsAuthPending}
+                    />
                     <div className="text-sm text-muted-foreground mt-4">
                         Já tem uma conta?{" "}
                         <Link

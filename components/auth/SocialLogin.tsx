@@ -5,19 +5,27 @@ import { Button } from "../ui/button"
 import { authClient } from "@/lib/auth-client"
 
 
-export const SocialLogin = () => {
+type SocialLoginProps = {
+    disabled?: boolean
+    onLoadingChange?: (loading: boolean) => void
+}
 
-    const [loadingGithub, setLoadingGithub] = useState(false)
-    const [loadingGoogle, setLoadingGoogle] = useState(false)
+export const SocialLogin = ({ disabled = false, onLoadingChange }: SocialLoginProps) => {
+
+    const [activeProvider, setActiveProvider] = useState<'google' | 'github' | null>(null)
     const [error, setError] = useState<string | null>(null)
+    const isLoading = activeProvider !== null
 
     const handleSocialLogin = async (provider: 'google' | 'github') => {
+        if (disabled || isLoading) {
+            return
+        }
+
         try {
-            if (provider === 'github') {
-                setLoadingGithub(true)
-            } else {
-                setLoadingGoogle(true)
-            }
+            setError(null)
+            setActiveProvider(provider)
+            onLoadingChange?.(true)
+
             const { error } = await authClient.signIn.social({
                 provider,
                 callbackURL: process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000',
@@ -28,20 +36,12 @@ export const SocialLogin = () => {
             }
         }
         catch (error) {
-            if (provider === 'github') {
-                setLoadingGithub(false)
-            } else {
-                setLoadingGoogle(false)
-            }
             console.log("Social login error:", error)
             setError("Ocorreu um erro ao tentar fazer login com a conta social. Por favor, tente novamente.")
         }
         finally {
-            if (provider === 'github') {
-                setLoadingGithub(false)
-            } else {
-                setLoadingGoogle(false)
-            }
+            setActiveProvider(null)
+            onLoadingChange?.(false)
         }
     }
 
@@ -57,7 +57,7 @@ export const SocialLogin = () => {
             variant="outline" 
             className="w-full md:w-1/2 gap-2 border-border bg-card text-foreground hover:bg-muted hover:text-emerald-700 cursor-pointer"
             onClick={() => handleSocialLogin('google')}
-            disabled={loadingGoogle}>
+            disabled={disabled || isLoading}>
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                     <path
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -76,13 +76,13 @@ export const SocialLogin = () => {
                     fill="#EA4335"
                     />
                 </svg>
-                { loadingGoogle ? "Carregando..." : "Continuar com Google" }
+                { activeProvider === "google" ? "Carregando..." : "Continuar com Google" }
             </Button>
             <Button 
             variant="outline" 
             className="w-full md:w-1/2 gap-2 border-border bg-card text-foreground hover:bg-muted hover:text-emerald-700 cursor-pointer" 
             onClick={() => handleSocialLogin('github')}
-            disabled={loadingGithub}>
+            disabled={disabled || isLoading}>
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                     <path
                     fillRule="evenodd"
@@ -91,7 +91,7 @@ export const SocialLogin = () => {
                     fill="#333333"
                     />
                 </svg>
-                { loadingGithub ? "Carregando..." : "Continuar com GitHub" }
+                { activeProvider === "github" ? "Carregando..." : "Continuar com GitHub" }
             </Button>
       </div>
       </>

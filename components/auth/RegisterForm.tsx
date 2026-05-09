@@ -10,18 +10,28 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 
-export const RegisterForm = () => {
+type RegisterFormProps = {
+    disabled?: boolean
+    onSubmittingChange?: (submitting: boolean) => void
+}
+
+export const RegisterForm = ({ disabled = false, onSubmittingChange }: RegisterFormProps) => {
     const router = useRouter()
 
     const [showPassword, setShowPassword] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const { register, handleSubmit, formState: { isSubmitting, errors, touchedFields }} = useForm<RegisterSchemaType>({
+    const [isAuthenticating, setIsAuthenticating] = useState(false)
+    const { register, handleSubmit, formState: { errors, touchedFields }} = useForm<RegisterSchemaType>({
         resolver: zodResolver(RegisterSchema),
         mode: 'onTouched',
     })
 
     const onSubmit = async (data: RegisterSchemaType) => {
         try {
+            setError(null)
+            setIsAuthenticating(true)
+            onSubmittingChange?.(true)
+
             const result = await authClient.signUp.email({
                 name: data.name,
                 email: data.email,
@@ -36,6 +46,11 @@ export const RegisterForm = () => {
         }
         catch (error){
             setError("Ocorreu um erro ao criar a conta. Por favor, tente novamente.")
+            console.log("Registration error:", error)
+        }
+        finally {
+            setIsAuthenticating(false)
+            onSubmittingChange?.(false)
         }
     }
 
@@ -53,6 +68,7 @@ export const RegisterForm = () => {
                     id="name"
                     className={`w-full rounded-md border ${errors.name && touchedFields.name ? 'border-red-500' : 'border-input'} bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`}
                     placeholder="Digite seu nome e sobrenome"
+                    disabled={disabled || isAuthenticating}
                     {...register("name")}
                 />
                 {errors.name && touchedFields.name && (
@@ -67,6 +83,7 @@ export const RegisterForm = () => {
                     id="email"
                     className={`w-full rounded-md border ${errors.email && touchedFields.email ? 'border-red-500' : 'border-input'} bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`}
                     placeholder="seu@email.com"
+                    disabled={disabled || isAuthenticating}
                     {...register("email")}
                 />
                 {errors.email && touchedFields.email && (
@@ -81,6 +98,7 @@ export const RegisterForm = () => {
                         id="password"
                         className={`w-full rounded-md border ${errors.password && touchedFields.password ? 'border-red-500' : 'border-input'} bg-transparent px-3 py-2 pr-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`}
                         placeholder="********"
+                        disabled={disabled || isAuthenticating}
                         {...register("password")}
                     />
                     <button
@@ -88,6 +106,7 @@ export const RegisterForm = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                         aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                        disabled={disabled || isAuthenticating}
                     >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -99,7 +118,7 @@ export const RegisterForm = () => {
             <button
                 type="submit"
                 className="w-full rounded-md bg-chart-2 px-3 py-2 text-sm font-medium text-white hover:bg-chart-2/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2 cursor-pointer"
-                disabled={isSubmitting}
+                disabled={disabled || isAuthenticating}
             >
                 Criar conta
             </button>
